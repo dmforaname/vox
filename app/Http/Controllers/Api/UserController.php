@@ -6,10 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use App\Traits\ApiResponser;
+use App\Traits\ClientTrait;
 
 class UserController extends Controller
 {
-    use ApiResponser;
+    use ApiResponser,ClientTrait;
 
     /**
      * Display a listing of the resource.
@@ -40,11 +41,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $url = config('app.api_v1').'/users';
-        $client = new Client([
-            'allow_redirects' => false,
-            'http_errors' => false
-        ]);
-
+        $client = $this->client();
         $response = $client->request('POST', $url, ['json' => $request->all()]);
 
         return $this->responseJson(
@@ -107,12 +104,7 @@ class UserController extends Controller
     public function Login(Request $request)
     {
         $url = config('app.api_v1').'/users/login';
-        
-        $client = new Client([
-            'allow_redirects' => false,
-            'http_errors' => false
-        ]);
-
+        $client = $client = $this->client();
         $response = $client->request('POST', $url, ['json' => $request->all()]);
 
         return $this->responseJson(
