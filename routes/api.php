@@ -21,4 +21,5 @@ use App\Http\Controllers\Api;
 Route::prefix('users')->name('UserApi.')->group(function () { 
    
     Route::resource('', Api\UserController::class)->only(['store']);
+    Route::post('/login',[Api\UserController::class,'login'])->name('login');
 });

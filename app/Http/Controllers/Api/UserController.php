@@ -39,7 +39,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $url = 'https://api-sport-events.php6-02.test.voxteneo.com/api/v1/users';
+        $url = config('app.api_v1').'/users';
         $client = new Client([
             'allow_redirects' => false,
             'http_errors' => false
@@ -96,5 +96,28 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function Login(Request $request)
+    {
+        $url = config('app.api_v1').'/users/login';
+        
+        $client = new Client([
+            'allow_redirects' => false,
+            'http_errors' => false
+        ]);
+
+        $response = $client->request('POST', $url, ['json' => $request->all()]);
+
+        return $this->responseJson(
+            json_decode($response->getBody(), true),
+            $response->getStatusCode()
+        );
     }
 }
