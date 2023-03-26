@@ -23,3 +23,8 @@ Route::prefix('users')->name('UserApi.')->group(function () {
     Route::resource('', Api\UserController::class)->only(['store']);
     Route::post('/login',[Api\UserController::class,'login'])->name('login');
 });
+
+Route::prefix('organizers')->name('OrganizerApi.')->group(function () { 
+   
+    Route::resource('', Api\OrganizerController::class)->only(['index']);
+});
