@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\ApiResponser;
 use App\Traits\ClientTrait;
+use Illuminate\Support\Facades\Log;
 
 class OrganizerController extends Controller
 {
@@ -83,7 +84,13 @@ class OrganizerController extends Controller
      */
     public function show($id)
     {
-        //
+        $client = $this->clientAuth(request()->header('Authorization'));
+        $response = $client->request('GET', $this->organizers_url.'/'.$id );
+
+        return $this->responseJson(
+            json_decode($response->getBody(), true),
+            $response->getStatusCode()
+        );
     }
 
     /**
@@ -106,7 +113,32 @@ class OrganizerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $params = $request->all();
+        $client = $this->clientAuth(request()->header('Authorization'));
+        
+        try {
+
+            $response = $client->request('PUT', $this->organizers_url.'/'.$id ,['json' => $params]);
+
+            if ($response->getStatusCode() != 204) {
+
+                throw new \Exception;
+            }
+
+        }catch (\Exception $e){
+
+            Log::info($response->getBody());
+            return $this->responseJson(
+                json_decode($response->getBody(), true),
+                $response->getStatusCode()
+            );
+        }
+        
+        return $this->success(
+            $params,
+            __('message.update',['X' => 'Organizer']),
+            201
+        );
     }
 
     /**
