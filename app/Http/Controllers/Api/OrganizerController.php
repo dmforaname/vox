@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use GuzzleHttp\Client;
 use App\Traits\ApiResponser;
+use App\Traits\ClientTrait;
 
 class OrganizerController extends Controller
 {
-    use ApiResponser;
+    use ApiResponser,ClientTrait;
 
     protected $organizers_url;
 
@@ -38,15 +38,7 @@ class OrganizerController extends Controller
         }
 
         $params = ['query' => array_merge($page,$perPage)];
-        
-        $client = new Client([
-            'allow_redirects' => false,
-            'http_errors' => false,
-            'headers' => [
-                'Authorization' => request()->header('Authorization')
-            ]
-        ]);
-
+        $client = $this->clientAuth(request()->header('Authorization'));
         $response = $client->request('GET', $this->organizers_url ,$params);
 
         return $this->responseJson(
@@ -74,15 +66,7 @@ class OrganizerController extends Controller
     public function store(Request $request)
     {
         $params = $request->all();
-        
-        $client = new Client([
-            'allow_redirects' => false,
-            'http_errors' => false,
-            'headers' => [
-                'Authorization' => request()->header('Authorization')
-            ]
-        ]);
-
+        $client = $this->clientAuth(request()->header('Authorization'));
         $response = $client->request('POST', $this->organizers_url, ['json' => $params]);
 
         return $this->responseJson(
