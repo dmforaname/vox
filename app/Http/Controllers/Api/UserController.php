@@ -104,7 +104,7 @@ class UserController extends Controller
     public function Login(Request $request)
     {
         $url = config('app.api_v1').'/users/login';
-        $client = $client = $this->client();
+        $client = $this->client();
         $response = $client->request('POST', $url, ['json' => $request->all()]);
 
         return $this->responseJson(
