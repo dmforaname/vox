@@ -26,5 +26,5 @@ Route::prefix('users')->name('UserApi.')->group(function () {
 
 Route::prefix('organizers')->name('OrganizerApi.')->group(function () { 
    
-    Route::resource('', Api\OrganizerController::class)->only(['index']);
+    Route::resource('', Api\OrganizerController::class)->only(['index','store']);
 });

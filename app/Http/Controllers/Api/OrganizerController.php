@@ -11,6 +11,13 @@ class OrganizerController extends Controller
 {
     use ApiResponser;
 
+    protected $organizers_url;
+
+    public function __construct()
+    {
+        $this->organizers_url = config('app.api_v1').'/organizers';
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -18,8 +25,6 @@ class OrganizerController extends Controller
      */
     public function index()
     {
-        $url = config('app.api_v1').'/organizers';
-
         $page = [];
         if (request()->page) {
 
@@ -42,7 +47,7 @@ class OrganizerController extends Controller
             ]
         ]);
 
-        $response = $client->request('GET', $url ,$params);
+        $response = $client->request('GET', $this->organizers_url ,$params);
 
         return $this->responseJson(
             json_decode($response->getBody(), true),
@@ -68,7 +73,22 @@ class OrganizerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $params = $request->all();
+        
+        $client = new Client([
+            'allow_redirects' => false,
+            'http_errors' => false,
+            'headers' => [
+                'Authorization' => request()->header('Authorization')
+            ]
+        ]);
+
+        $response = $client->request('POST', $this->organizers_url, ['json' => $params]);
+
+        return $this->responseJson(
+            json_decode($response->getBody(), true),
+            $response->getStatusCode()
+        );
     }
 
     /**
