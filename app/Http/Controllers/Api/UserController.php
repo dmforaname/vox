@@ -4,9 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use GuzzleHttp\Client;
+use App\Traits\ApiResponser;
 
 class UserController extends Controller
 {
+    use ApiResponser;
+
     /**
      * Display a listing of the resource.
      *
@@ -35,7 +39,18 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $url = 'https://api-sport-events.php6-02.test.voxteneo.com/api/v1/users';
+        $client = new Client([
+            'allow_redirects' => false,
+            'http_errors' => false
+        ]);
+
+        $response = $client->request('POST', $url, ['json' => $request->all()]);
+
+        return $this->responseJson(
+            json_decode($response->getBody(), true),
+            $response->getStatusCode()
+        );
     }
 
     /**
