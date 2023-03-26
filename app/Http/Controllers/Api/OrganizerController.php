@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\OrganizerUpdateRequest;
 use Illuminate\Http\Request;
 use App\Traits\ApiResponser;
 use App\Traits\ClientTrait;
@@ -111,9 +112,9 @@ class OrganizerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(OrganizerUpdateRequest $request, $id)
     {
-        $params = $request->all();
+        $params = $request->validated();
         $client = $this->clientAuth(request()->header('Authorization'));
         
         try {
