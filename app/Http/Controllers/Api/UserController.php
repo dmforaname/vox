@@ -4,9 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use GuzzleHttp\Client;
+use App\Traits\ApiResponser;
+use App\Traits\ClientTrait;
 
 class UserController extends Controller
 {
+    use ApiResponser,ClientTrait;
+
     /**
      * Display a listing of the resource.
      *
@@ -35,7 +40,14 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $url = config('app.api_v1').'/users';
+        $client = $this->client();
+        $response = $client->request('POST', $url, ['json' => $request->all()]);
+
+        return $this->responseJson(
+            json_decode($response->getBody(), true),
+            $response->getStatusCode()
+        );
     }
 
     /**
@@ -81,5 +93,23 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function Login(Request $request)
+    {
+        $url = config('app.api_v1').'/users/login';
+        $client = $this->client();
+        $response = $client->request('POST', $url, ['json' => $request->all()]);
+
+        return $this->responseJson(
+            json_decode($response->getBody(), true),
+            $response->getStatusCode()
+        );
     }
 }

@@ -232,4 +232,6 @@ return [
 
     ],
 
+    'api_v1' => env('API_URL_V1', 'http://localhost'),
+
 ];
